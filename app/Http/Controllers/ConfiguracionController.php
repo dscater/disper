@@ -14,7 +14,6 @@ class ConfiguracionController extends Controller
     public $validacion = [
         "razon_social" => "required|min:2",
         "nombre_sistema" => "required|min:2",
-        "nit" => "required|min:2",
         "actividad" => "required|min:2",
         "dir" => "required|min:2",
     ];

@@ -1,6 +1,6 @@
 <script setup>
 import { useForm, usePage } from "@inertiajs/vue3";
-import { useUsuarios } from "@/composables/usuarios/useUsuarios";
+import { usePersonals } from "@/composables/personals/usePersonals";
 import { watch, ref, computed, defineEmits } from "vue";
 const props = defineProps({
     open_dialog: {
@@ -13,16 +13,16 @@ const props = defineProps({
     },
 });
 
-const { oUsuario, limpiarUsuario } = useUsuarios();
+const { oPersonal, limpiarPersonal } = usePersonals();
 const accion = ref(props.accion_dialog);
 const dialog = ref(props.open_dialog);
-let form = useForm(oUsuario.value);
+let form = useForm(oPersonal.value);
 watch(
     () => props.open_dialog,
     (newValue) => {
         dialog.value = newValue;
         if (dialog.value) {
-            form = useForm(oUsuario.value);
+            form = useForm(oPersonal.value);
         }
     }
 );
@@ -47,9 +47,9 @@ const listExpedido = [
     { value: "BN", label: "Beni" },
 ];
 
-const listTipos = [
-{ value: "ADMINISTRADOR", label: "ADMINISTRADOR" },
-    { value: "SUPERVISOR DE PERSONAL", label: "SUPERVISOR DE PERSONAL" },
+const listEstados = [
+    { value: "ACTIVO", label: "ACTIVO" },
+    { value: "INACTIVO", label: "INACTIVO" },
 ];
 
 const foto = ref(null);
@@ -59,14 +59,14 @@ function cargaArchivo(e, key) {
 }
 
 const tituloDialog = computed(() => {
-    return accion.value == 0 ? `Agregar Usuario` : `Editar Usuario`;
+    return accion.value == 0 ? `Agregar Personal` : `Editar Personal`;
 });
 
 const enviarFormulario = () => {
     let url =
         form["_method"] == "POST"
-            ? route("usuarios.store")
-            : route("usuarios.update", form.id);
+            ? route("personals.store")
+            : route("personals.update", form.id);
 
     form.post(url, {
         preserveScroll: true,
@@ -79,7 +79,7 @@ const enviarFormulario = () => {
                 confirmButtonColor: "#3085d6",
                 confirmButtonText: `Aceptar`,
             });
-            limpiarUsuario();
+            limpiarPersonal();
             emits("envio-formulario");
         },
         onError: (err) => {
@@ -168,7 +168,7 @@ const cerrarDialog = () => {
                                         "
                                         density="compact"
                                         variant="outlined"
-                                        label="Apellido Paterno*"
+                                        label="Apellido Paterno"
                                         v-model="form.paterno"
                                         required
                                     ></v-text-field>
@@ -237,6 +237,61 @@ const cerrarDialog = () => {
                                     ></v-select>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4">
+                                    <v-select
+                                        :hide-details="
+                                            form.errors?.estado_civil
+                                                ? false
+                                                : true
+                                        "
+                                        :error="
+                                            form.errors?.estado_civil
+                                                ? true
+                                                : false
+                                        "
+                                        :error-messages="
+                                            form.errors?.estado_civil
+                                                ? form.errors?.estado_civil
+                                                : ''
+                                        "
+                                        density="compact"
+                                        variant="outlined"
+                                        clearable
+                                        :items="[
+                                            'SOLTERO',
+                                            'CASADO',
+                                            'DIVORCIADO',
+                                            'VIUDO',
+                                        ]"
+                                        label="Estado Civil*"
+                                        no-data-text="Sin registros"
+                                        v-model="form.estado_civil"
+                                        required
+                                    ></v-select>
+                                </v-col>
+                                <v-col cols="12" sm="6" md="4">
+                                    <v-select
+                                        :hide-details="
+                                            form.errors?.genero ? false : true
+                                        "
+                                        :error="
+                                            form.errors?.genero ? true : false
+                                        "
+                                        :error-messages="
+                                            form.errors?.genero
+                                                ? form.errors?.genero
+                                                : ''
+                                        "
+                                        density="compact"
+                                        variant="outlined"
+                                        clearable
+                                        :items="['HOMBRE', 'MUJER']"
+                                        label="Género*"
+                                        no-data-text="Sin registros"
+                                        v-model="form.genero"
+                                        required
+                                    ></v-select>
+                                </v-col>
+                                <v-col cols="12" sm="6" md="4">
                                     <v-text-field
                                         :hide-details="
                                             form.errors?.dir ? false : true
@@ -269,28 +324,74 @@ const cerrarDialog = () => {
                                         "
                                         density="compact"
                                         variant="outlined"
-                                        label="Correo"
-                                        v-model="form.email"
+                                        label="Email"
+                                        v-model="form.correo"
                                         required
                                     ></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4">
                                     <v-text-field
                                         :hide-details="
-                                            form.errors?.fono ? false : true
+                                            form.errors?.cel ? false : true
                                         "
-                                        :error="
-                                            form.errors?.fono ? true : false
-                                        "
+                                        :error="form.errors?.cel ? true : false"
                                         :error-messages="
-                                            form.errors?.fono
-                                                ? form.errors?.fono
+                                            form.errors?.cel
+                                                ? form.errors?.cel
                                                 : ''
                                         "
                                         density="compact"
                                         variant="outlined"
-                                        label="Teléfono/Celular*"
-                                        v-model="form.fono"
+                                        label="Celular"
+                                        v-model="form.cel"
+                                        required
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="12" sm="6" md="4">
+                                    <v-text-field
+                                        :hide-details="
+                                            form.errors?.nombre_contacto
+                                                ? false
+                                                : true
+                                        "
+                                        :error="
+                                            form.errors?.nombre_contacto
+                                                ? true
+                                                : false
+                                        "
+                                        :error-messages="
+                                            form.errors?.nombre_contacto
+                                                ? form.errors?.nombre_contacto
+                                                : ''
+                                        "
+                                        density="compact"
+                                        variant="outlined"
+                                        label="Nombre Contacto"
+                                        v-model="form.nombre_contacto"
+                                        required
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="12" sm="6" md="4">
+                                    <v-text-field
+                                        :hide-details="
+                                            form.errors?.cel_contacto
+                                                ? false
+                                                : true
+                                        "
+                                        :error="
+                                            form.errors?.cel_contacto
+                                                ? true
+                                                : false
+                                        "
+                                        :error-messages="
+                                            form.errors?.cel_contacto
+                                                ? form.errors?.cel_contacto
+                                                : ''
+                                        "
+                                        density="compact"
+                                        variant="outlined"
+                                        label="Celular Contacto"
+                                        v-model="form.cel_contacto"
                                         required
                                     ></v-text-field>
                                 </v-col>
@@ -320,70 +421,27 @@ const cerrarDialog = () => {
                                 <v-col cols="12" sm="6" md="4">
                                     <v-select
                                         :hide-details="
-                                            form.errors?.tipo ? false : true
+                                            form.errors?.estado ? false : true
                                         "
                                         :error="
-                                            form.errors?.tipo ? true : false
+                                            form.errors?.estado ? true : false
                                         "
                                         :error-messages="
-                                            form.errors?.tipo
-                                                ? form.errors?.tipo
+                                            form.errors?.estado
+                                                ? form.errors?.estado
                                                 : ''
                                         "
                                         density="compact"
                                         variant="outlined"
                                         clearable
-                                        :items="listTipos"
+                                        :items="listEstados"
                                         item-value="value"
                                         item-title="label"
-                                        label="Tipo de Usuario*"
+                                        label="Estado*"
                                         no-data-text="Sin registros"
-                                        v-model="form.tipo"
+                                        v-model="form.estado"
                                         required
                                     ></v-select>
-                                </v-col>
-                                <v-col
-                                    cols="12"
-                                    sm="6"
-                                    md="4"
-                                    class="text-center d-flex justify-center align-center"
-                                >
-                                    <div
-                                        class="text-body-2 text-medium-emphasis mr-3"
-                                    >
-                                        Acceso
-                                    </div>
-                                    <v-switch
-                                        hide-details
-                                        color="success"
-                                        true-value="1"
-                                        false-value="0"
-                                        v-model="form.acceso"
-                                    >
-                                        <template v-slot:label>
-                                            <v-chip
-                                                class="cursor-pointer"
-                                                :color="
-                                                    form.acceso == 1
-                                                        ? 'success'
-                                                        : 'error'
-                                                "
-                                                :prepend-icon="
-                                                    form.acceso == 1
-                                                        ? 'mdi-check'
-                                                        : 'mdi-lock'
-                                                "
-                                            >
-                                                <span
-                                                    v-text="
-                                                        form.acceso == 1
-                                                            ? 'Habilitado'
-                                                            : 'Denegado'
-                                                    "
-                                                ></span>
-                                            </v-chip>
-                                        </template>
-                                    </v-switch>
                                 </v-col>
                             </v-row>
                         </form>

@@ -137,7 +137,7 @@ const scrollActive = () => {
                     oUser.permisos.includes('usuarios.index') ||
                     oUser.permisos.includes('personals.index') ||
                     oUser.permisos.includes('entrenamientos.index')||
-                    oUser.permisos.includes('asignacion_personal.index')
+                    oUser.permisos.includes('asignacions.index')
                 "
             >
                 <span v-if="rail && !mobile" class="text-center d-block"
@@ -181,11 +181,11 @@ const scrollActive = () => {
             </v-list-item>
             <v-list-item
                 :class="[
-                    route_current == 'asignacion_personal.index' ? 'active' : '',
+                    route_current == 'asignacions.index' ? 'active' : '',
                 ]"
-                v-if="oUser.permisos.includes('asignacion_personal.index')"
+                v-if="oUser.permisos.includes('asignacions.index')"
                 prepend-icon="mdi-image-multiple"
-                @click="cambiarUrl(route('asignacion_personal.index'))"
+                @click="cambiarUrl(route('asignacions.index'))"
                 link
             >
                 <v-list-item-title>Asignación de Personal</v-list-item-title>

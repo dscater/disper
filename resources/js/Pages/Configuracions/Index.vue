@@ -384,38 +384,6 @@ function limpiaRefs() {
                                                     >
                                                         <v-text-field
                                                             :hide-details="
-                                                                form.errors?.nit
-                                                                    ? false
-                                                                    : true
-                                                            "
-                                                            :error="
-                                                                form.errors?.nit
-                                                                    ? true
-                                                                    : false
-                                                            "
-                                                            :error-messages="
-                                                                form.errors?.nit
-                                                                    ? form
-                                                                          .errors
-                                                                          ?.nit
-                                                                    : ''
-                                                            "
-                                                            density="compact"
-                                                            variant="outlined"
-                                                            color="grey"
-                                                            label="Nit*"
-                                                            v-model="form.nit"
-                                                            required
-                                                        ></v-text-field>
-                                                    </v-col>
-                                                    <v-col
-                                                        cols="12"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="4"
-                                                    >
-                                                        <v-text-field
-                                                            :hide-details="
                                                                 form.errors
                                                                     ?.ciudad
                                                                     ? false

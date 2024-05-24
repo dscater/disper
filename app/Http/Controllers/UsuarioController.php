@@ -20,6 +20,7 @@ class UsuarioController extends Controller
         "ci" => "required|min:1",
         "ci_exp" => "required",
         "dir" => "required|min:1",
+        "tipo" => "required",
         "fono" => "required|min:1",
     ];
 
@@ -73,7 +74,7 @@ class UsuarioController extends Controller
     public function paginado(Request $request)
     {
         $search = $request->search;
-        $usuarios = User::where("id", "!=", 1)->where("tipo", "SUPER USUARIO");
+        $usuarios = User::where("id", "!=", 1);
 
         if (trim($search) != "") {
             $usuarios->where("usuario", "LIKE", "%$search%");
@@ -106,7 +107,6 @@ class UsuarioController extends Controller
         } while (User::where('usuario', $nombre_usuario)->get()->first());
 
         $request['password'] = 'NoNulo';
-        $request['tipo'] = "SUPER USUARIO";
         $request['fecha_registro'] = date('Y-m-d');
         DB::beginTransaction();
         try {

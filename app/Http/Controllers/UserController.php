@@ -33,10 +33,10 @@ class UserController extends Controller
             "entrenamientos.edit",
             "entrenamientos.destroy",
 
-            "asignacion_personal.index",
-            "asignacion_personal.create",
-            "asignacion_personal.edit",
-            "asignacion_personal.destroy",
+            "asignacions.index",
+            "asignacions.create",
+            "asignacions.edit",
+            "asignacions.destroy",
 
             "reportes.usuarios",
 

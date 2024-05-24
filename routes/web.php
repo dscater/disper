@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\InicioController;
 use App\Http\Controllers\ConfiguracionController;
+use App\Http\Controllers\EntrenamientoController;
+use App\Http\Controllers\PersonalController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\UserController;
@@ -77,12 +80,26 @@ Route::middleware('auth')->group(function () {
         ["index", "store"]
     );
 
-    // // DOCTORES
-    // Route::get("/doctors/paginado", [DoctorController::class, 'paginado'])->name("doctors.paginado");
-    // Route::get("/doctors/listado", [DoctorController::class, 'listado'])->name("doctors.listado");
-    // Route::resource("doctors", DoctorController::class)->only(
-    //     ["index", "store", "update", "show", "destroy"]
-    // );
+    // PERSONAL
+    Route::get("/personals/paginado", [PersonalController::class, 'paginado'])->name("personals.paginado");
+    Route::get("/personals/listado", [PersonalController::class, 'listado'])->name("personals.listado");
+    Route::resource("personals", PersonalController::class)->only(
+        ["index", "store", "update", "show", "destroy"]
+    );
+
+    // ENTRENAMIENTOS
+    Route::get("/entrenamientos/paginado", [EntrenamientoController::class, 'paginado'])->name("entrenamientos.paginado");
+    Route::get("/entrenamientos/listado", [EntrenamientoController::class, 'listado'])->name("entrenamientos.listado");
+    Route::resource("entrenamientos", EntrenamientoController::class)->only(
+        ["index", "store", "update", "show", "destroy"]
+    );
+
+    // ASIGNACION
+    Route::get("/asignacions/paginado", [AsignacionController::class, 'paginado'])->name("asignacions.paginado");
+    Route::get("/asignacions/listado", [AsignacionController::class, 'listado'])->name("asignacions.listado");
+    Route::resource("asignacions", AsignacionController::class)->only(
+        ["index", "create", "store", "update", "show", "destroy"]
+    );
 
     // REPORTES
     Route::get('reportes/usuarios', [ReporteController::class, 'usuarios'])->name("reportes.usuarios");
