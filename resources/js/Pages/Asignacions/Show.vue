@@ -39,13 +39,10 @@ const props = defineProps({
 });
 
 const cargaMapaGoogle = async () => {
-    console.log(mapa_id);
-    console.log(props.asignacion.asignacion_detalles[0].lat);
-    console.log(props.asignacion.asignacion_detalles[0].lng);
-
     // Inicializa el mapa
     const { Map, InfoWindow } = await google.maps.importLibrary("maps");
-    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+    const { AdvancedMarkerElement, PinElement } =
+        await google.maps.importLibrary("marker");
     const map = new Map(document.getElementById("google_map"), {
         zoom: 13,
         center: {
@@ -58,7 +55,11 @@ const cargaMapaGoogle = async () => {
 
     // Crear los marcadores
     props.asignacion.asignacion_detalles.forEach(function (markerData) {
-        console.log(markerData.total_personal)
+        console.log(markerData.total_personal);
+        const pinGlyph = new PinElement({
+            glyph: `${markerData.total_personal}/${markerData.requerido}`,
+            glyphColor: "white",
+        });
         var AME = new AdvancedMarkerElement({
             map,
             position: {
@@ -66,7 +67,25 @@ const cargaMapaGoogle = async () => {
                 lng: Number(markerData.lng),
             },
             gmpDraggable: false,
-            title: "ASDAS",
+            // title: markerData.nombre,
+            content: pinGlyph.element,
+        });
+
+        // Crear el contenido de la InfoWindow
+        const contentString = `
+            <div>
+                <h3>${markerData.lugar.nombre}</h3>
+                <p>Personal asignado: ${markerData.total_personal}</p>
+                <p>Personal requerido: ${markerData.requerido}</p>
+                <p>Personal restante: ${markerData.restante}</p>
+                restante
+            </div>
+        `;
+
+        // Agregar un evento de clic al marcador
+        AME.addListener("click", () => {
+            infoWindow.setContent(contentString);
+            infoWindow.open(map, AME);
         });
     });
 };

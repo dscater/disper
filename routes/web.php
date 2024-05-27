@@ -4,6 +4,7 @@ use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\InicioController;
 use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\EntrenamientoController;
+use App\Http\Controllers\LugarController;
 use App\Http\Controllers\PersonalController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReporteController;
@@ -101,9 +102,22 @@ Route::middleware('auth')->group(function () {
         ["index", "create", "store", "update", "show", "destroy"]
     );
 
+    // LUGARES
+    Route::get("/lugars/getLugarUnico", [LugarController::class, 'getLugarUnico'])->name("lugars.getLugarUnico");
+    Route::get("/lugars/getLugars", [LugarController::class, 'getLugars'])->name("lugars.getLugars");
+    
     // REPORTES
     Route::get('reportes/usuarios', [ReporteController::class, 'usuarios'])->name("reportes.usuarios");
     Route::get('reportes/r_usuarios', [ReporteController::class, 'r_usuarios'])->name("reportes.r_usuarios");
+
+    Route::get('reportes/personals', [ReporteController::class, 'personals'])->name("reportes.personals");
+    Route::get('reportes/r_personals', [ReporteController::class, 'r_personals'])->name("reportes.r_personals");
+
+    Route::get('reportes/asignacion_personal', [ReporteController::class, 'asignacion_personal'])->name("reportes.asignacion_personal");
+    Route::get('reportes/r_asignacion_personal', [ReporteController::class, 'r_asignacion_personal'])->name("reportes.r_asignacion_personal");
+
+    Route::get('reportes/personal_zonas', [ReporteController::class, 'personal_zonas'])->name("reportes.personal_zonas");
+    Route::get('reportes/r_personal_zonas', [ReporteController::class, 'r_personal_zonas'])->name("reportes.r_personal_zonas");
 });
 
 require __DIR__ . '/auth.php';

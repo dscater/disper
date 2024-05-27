@@ -134,8 +134,8 @@
         }
 
         .bg-principal {
-            background: #019199;
-            color: white;
+            background: #63c3df;
+           color: black;
         }
 
         .txt_rojo {}
@@ -147,13 +147,13 @@
 </head>
 
 <body>
-    @inject('institucion', 'App\Models\Institucion')
+    @inject('configuracion', 'App\Models\Configuracion')
     <div class="encabezado">
         <div class="logo">
-            <img src="{{ $institucion->first()->url_logo }}">
+            <img src="{{ $configuracion->first()->url_logo }}">
         </div>
         <h2 class="titulo">
-            {{ $institucion->first()->razon_social }}
+            {{ $configuracion->first()->razon_social }}
         </h2>
         <h4 class="texto">LISTA DE USUARIOS</h4>
         <h4 class="fecha">Expedido: {{ date('d-m-Y') }}</h4>

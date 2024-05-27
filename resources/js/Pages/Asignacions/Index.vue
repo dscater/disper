@@ -7,7 +7,7 @@ const breadbrums = [
         name_url: "inicio",
     },
     {
-        title: "Asignacions",
+        title: "Asignación de Personal",
         disabled: false,
         url: "",
         name_url: "",
@@ -122,6 +122,12 @@ const agregarRegistro = () => {
 const verAsignacion = (item) => {
     router.get(route("asignacions.show", item.id));
 };
+const pdf = (item) => {
+    window.open(
+        route("reportes.r_asignacion_personal") + "?asignacion_id=" + item.id,
+        "_blank"
+    );
+};
 
 const eliminarAsignacion = (item) => {
     Swal.fire({
@@ -144,7 +150,7 @@ const eliminarAsignacion = (item) => {
 };
 </script>
 <template>
-    <Head title="Asignacions"></Head>
+    <Head title="Asignación Personal"></Head>
     <div class="contenedor_loading" v-if="cargando">
         <div class="loader">
             <div>
@@ -215,7 +221,9 @@ const eliminarAsignacion = (item) => {
                         <v-row
                             class="bg-cyan-accent-4 d-flex align-center pa-3"
                         >
-                            <v-col cols="12" sm="6" md="4"> Asignacions </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                Asignación de Personal
+                            </v-col>
                             <v-col cols="12" sm="6" md="4" offset-md="4">
                                 <v-text-field
                                     v-model="search"
@@ -269,6 +277,13 @@ const eliminarAsignacion = (item) => {
                                             icon="mdi-eye"
                                         ></v-btn>
                                         <v-btn
+                                            color="blue"
+                                            size="small"
+                                            class="pa-1 ma-1"
+                                            @click="pdf(item)"
+                                            icon="mdi-file-outline"
+                                        ></v-btn>
+                                        <v-btn
                                             color="error"
                                             size="small"
                                             class="pa-1 ma-1"
@@ -298,6 +313,20 @@ const eliminarAsignacion = (item) => {
                                                 cols="12"
                                                 class="text-center pa-5"
                                             >
+                                                <v-btn
+                                                    color="blue"
+                                                    size="small"
+                                                    class="pa-1 ma-1"
+                                                    @click="verAsignacion(item)"
+                                                    icon="mdi-eye"
+                                                ></v-btn>
+                                                <v-btn
+                                                    color="blue"
+                                                    size="small"
+                                                    class="pa-1 ma-1"
+                                                    @click="pdf(item)"
+                                                    icon="mdi-file-outline"
+                                                ></v-btn>
                                                 <v-btn
                                                     color="error"
                                                     size="small"

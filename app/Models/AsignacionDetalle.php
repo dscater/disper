@@ -20,6 +20,7 @@ class AsignacionDetalle extends Model
         "requerido",
         "total_personal",
         "restante",
+        "fecha_registro"
     ];
 
     public function asignacion()

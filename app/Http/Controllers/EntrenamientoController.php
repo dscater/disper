@@ -157,8 +157,8 @@ class EntrenamientoController extends Controller
                         ->get()->first();
                     if (!$lugar) {
                         $lugar = Lugar::create([
-                            "nombre" => $nuevos_datos["lugar"],
-                            "descripcion" => $nuevos_datos["descripcion"],
+                            "nombre" => mb_strtoupper($nuevos_datos["lugar"]),
+                            "descripcion" => mb_strtoupper($nuevos_datos["descripcion"]),
                             "capacidad" => $nuevos_datos["capacidad"],
                             "lat" => $nuevos_datos["lat"],
                             "lng" => $nuevos_datos["lng"],
@@ -181,7 +181,7 @@ class EntrenamientoController extends Controller
                     }
                 }
                 echo PHP_EOL;
-                // sleep(0.5);
+                sleep(1);
             }
 
             DB::commit();

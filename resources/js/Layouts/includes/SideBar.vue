@@ -23,6 +23,9 @@ const user_logeado = ref({
 
 const submenus = {
     "reportes.usuarios": "Reportes",
+    "reportes.personals": "Reportes",
+    "reportes.asignacion_personal": "Reportes",
+    "reportes.personal_zonas": "Reportes",
 };
 
 const route_current = ref("");
@@ -136,7 +139,7 @@ const scrollActive = () => {
                 v-if="
                     oUser.permisos.includes('usuarios.index') ||
                     oUser.permisos.includes('personals.index') ||
-                    oUser.permisos.includes('entrenamientos.index')||
+                    oUser.permisos.includes('entrenamientos.index') ||
                     oUser.permisos.includes('asignacions.index')
                 "
             >
@@ -181,7 +184,11 @@ const scrollActive = () => {
             </v-list-item>
             <v-list-item
                 :class="[
-                    route_current == 'asignacions.index' ? 'active' : '',
+                    route_current == 'asignacions.index' ||
+                    route_current == 'asignacions.create' ||
+                    route_current == 'asignacions.show'
+                        ? 'active'
+                        : '',
                 ]"
                 v-if="oUser.permisos.includes('asignacions.index')"
                 prepend-icon="mdi-image-multiple"
@@ -219,9 +226,9 @@ const scrollActive = () => {
                 class="text-caption"
                 v-if="
                     oUser.permisos.includes('reportes.usuarios') ||
-                    oUser.permisos.includes('reportes.historial_pacientes') ||
-                    oUser.permisos.includes('reportes.pacientes') ||
-                    oUser.permisos.includes('reportes.diagnosticos')
+                    oUser.permisos.includes('reportes.personals') ||
+                    oUser.permisos.includes('reportes.asignacion_personal') ||
+                    oUser.permisos.includes('reportes.personal_zonas')
                 "
                 ><span v-if="rail && !mobile" class="text-center d-block"
                     ><v-icon>mdi-dots-horizontal</v-icon></span
@@ -233,9 +240,9 @@ const scrollActive = () => {
                 value="Reportes"
                 v-if="
                     oUser.permisos.includes('reportes.usuarios') ||
-                    oUser.permisos.includes('reportes.historial_pacientes') ||
-                    oUser.permisos.includes('reportes.pacientes') ||
-                    oUser.permisos.includes('reportes.diagnosticos')
+                    oUser.permisos.includes('reportes.personals') ||
+                    oUser.permisos.includes('reportes.asignacion_personal') ||
+                    oUser.permisos.includes('reportes.personal_zonas')
                 "
             >
                 <template v-slot:activator="{ props }">
@@ -245,9 +252,9 @@ const scrollActive = () => {
                         title="Reportes"
                         :class="[
                             route_current == 'reportes.usuarios' ||
-                            route_current == 'reportes.historial_pacientes' ||
-                            route_current == 'reportes.pacientes' ||
-                            route_current == 'reportes.diagnosticos'
+                            route_current == 'reportes.personals' ||
+                            route_current == 'reportes.asignacion_personal' ||
+                            route_current == 'reportes.personal_zonas'
                                 ? 'active'
                                 : '',
                         ]"
@@ -264,7 +271,7 @@ const scrollActive = () => {
                 <v-list-item
                     v-if="oUser.permisos.includes('reportes.usuarios')"
                     prepend-icon="mdi-chevron-right"
-                    title="Usuarios"
+                    title="Lista de Usuarios"
                     :class="[
                         route_current == 'reportes.usuarios' ? 'active' : '',
                     ]"
@@ -276,21 +283,39 @@ const scrollActive = () => {
                         color="white"
                         activator="parent"
                         location="end"
-                        >Usuarios</v-tooltip
+                        >Lista de Usuarios</v-tooltip
+                    ></v-list-item
+                >
+                <v-list-item
+                    v-if="oUser.permisos.includes('reportes.personals')"
+                    prepend-icon="mdi-chevron-right"
+                    title="Lista de Personal"
+                    :class="[
+                        route_current == 'reportes.personals' ? 'active' : '',
+                    ]"
+                    @click="cambiarUrl(route('reportes.personals'))"
+                    link
+                >
+                    <v-tooltip
+                        v-if="rail && !mobile"
+                        color="white"
+                        activator="parent"
+                        location="end"
+                        >Lista de Personal</v-tooltip
                     ></v-list-item
                 >
                 <v-list-item
                     v-if="
-                        oUser.permisos.includes('reportes.historial_pacientes')
+                        oUser.permisos.includes('reportes.asignacion_personal')
                     "
                     prepend-icon="mdi-chevron-right"
-                    title="Historial de Pacientes"
+                    title="Asignaciones de Personal"
                     :class="[
-                        route_current == 'reportes.historial_pacientes'
+                        route_current == 'reportes.asignacion_personal'
                             ? 'active'
                             : '',
                     ]"
-                    @click="cambiarUrl(route('reportes.historial_pacientes'))"
+                    @click="cambiarUrl(route('reportes.asignacion_personal'))"
                     link
                 >
                     <v-tooltip
@@ -298,37 +323,19 @@ const scrollActive = () => {
                         color="white"
                         activator="parent"
                         location="end"
-                        >Historial de Pacientes</v-tooltip
+                        >Asignaciones de Personal</v-tooltip
                     ></v-list-item
                 >
                 <v-list-item
-                    v-if="oUser.permisos.includes('reportes.pacientes')"
+                    v-if="oUser.permisos.includes('reportes.personal_zonas')"
                     prepend-icon="mdi-chevron-right"
-                    title="Lista de Pacientes"
+                    title="Personal en Zonas"
                     :class="[
-                        route_current == 'reportes.pacientes' ? 'active' : '',
-                    ]"
-                    @click="cambiarUrl(route('reportes.pacientes'))"
-                    link
-                >
-                    <v-tooltip
-                        v-if="rail && !mobile"
-                        color="white"
-                        activator="parent"
-                        location="end"
-                        >Lista de Pacientes</v-tooltip
-                    ></v-list-item
-                >
-                <v-list-item
-                    v-if="oUser.permisos.includes('reportes.diagnosticos')"
-                    prepend-icon="mdi-chevron-right"
-                    title="Diagnósticos por Imagen"
-                    :class="[
-                        route_current == 'reportes.diagnosticos'
+                        route_current == 'reportes.personal_zonas'
                             ? 'active'
                             : '',
                     ]"
-                    @click="cambiarUrl(route('reportes.diagnosticos'))"
+                    @click="cambiarUrl(route('reportes.personal_zonas'))"
                     link
                 >
                     <v-tooltip
@@ -336,7 +343,7 @@ const scrollActive = () => {
                         color="white"
                         activator="parent"
                         location="end"
-                        >Diagnósticos por Imagen</v-tooltip
+                        >Personal en Zonas</v-tooltip
                     ></v-list-item
                 >
             </v-list-group>

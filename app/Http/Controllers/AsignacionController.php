@@ -29,30 +29,11 @@ class AsignacionController extends Controller
 
     public function listado()
     {
-        $asignacions = Asignacion::select("asignacions.*")->where("status", 1)->get();
+        $asignacions = Asignacion::select("asignacions.*")->where("status", 1)->orderBy("id", "desc")->get();
         return response()->JSON([
             "asignacions" => $asignacions
         ]);
     }
-
-    public function byTipo(Request $request)
-    {
-        $asignacions = Asignacion::select("asignacions.*")->where("status", 1);
-        if (isset($request->tipo) && trim($request->tipo) != "") {
-            $asignacions = $asignacions->where("tipo", $request->tipo);
-        }
-
-        if ($request->order && $request->order == "desc") {
-            $asignacions->orderBy("asignacions.id", "desc");
-        }
-
-        $asignacions = $asignacions->get();
-
-        return response()->JSON([
-            "asignacions" => $asignacions
-        ]);
-    }
-
     public function paginado(Request $request)
     {
         $search = $request->search;
@@ -99,7 +80,7 @@ class AsignacionController extends Controller
             $mes_dia = date("m-d", strtotime($fecha_actual));
             $hora = date("H", strtotime($hora_actual));
 
-            $ids_personal = Personal::pluck("id");
+            $ids_personal = Personal::where("estado", "ACTIVO")->pluck("id");
             $ids_personal = $ids_personal->toArray();
             foreach ($lugars as $item) {
                 // buscar en los entrenamientos segun fecha y hora
@@ -142,7 +123,8 @@ class AsignacionController extends Controller
                     "hora" => $hora_actual,
                     "requerido" => $total_requerido,
                     "total_personal" => count($ids_personal_asignado),
-                    "restante" => $restante
+                    "restante" => $restante,
+                    "fecha_registro" => $fecha_actual
                 ]);
 
                 if (count($ids_personal_asignado) > 0) {
@@ -152,6 +134,7 @@ class AsignacionController extends Controller
                         ]);
                     }
                 }
+                usleep(500000);
             }
 
             $datos_original = HistorialAccion::getDetalleRegistro($nueva_asignacion, "asignacions");

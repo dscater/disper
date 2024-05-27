@@ -68,7 +68,10 @@ class User extends Authenticatable
 
     public function getFechaRegistroTAttribute()
     {
-        return date("d/m/Y", strtotime($this->fecha_registro));
+        if ($this->fecha_registro)
+            return date("d/m/Y", strtotime($this->fecha_registro));
+
+        return "";
     }
 
     public function getFullCiAttribute()

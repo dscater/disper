@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asignacion;
 use App\Models\Doctor;
+use App\Models\Entrenamiento;
+use App\Models\Personal;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,9 +42,30 @@ class UserController extends Controller
             "asignacions.destroy",
 
             "reportes.usuarios",
+            "reportes.personals",
+            "reportes.asignacion_personal",
+            "reportes.personal_zonas",
 
         ],
         "SUPERVISOR DE PERSONAL" => [
+            "personals.index",
+            "personals.create",
+            "personals.edit",
+            "personals.destroy",
+
+            "entrenamientos.index",
+            "entrenamientos.create",
+            "entrenamientos.edit",
+            "entrenamientos.destroy",
+
+            "asignacions.index",
+            "asignacions.create",
+            "asignacions.edit",
+            "asignacions.destroy",
+            
+            "reportes.personals",
+            "reportes.asignacion_personal",
+            "reportes.personal_zonas",
         ],
     ];
 
@@ -91,29 +115,34 @@ class UserController extends Controller
             ];
         }
 
-        $array_infos[] = [
-            'label' => 'Personal',
-            'cantidad' => 0,
-            'color' => 'bg-orange',
-            'icon' => asset("imgs/businessman.png"),
-            "url" => "usuarios.index"
-        ];
 
-        $array_infos[] = [
-            'label' => 'Entrenamientos',
-            'cantidad' => 0,
-            'color' => 'bg-cyan-accent-2',
-            'icon' => asset("imgs/checklist.png"),
-            "url" => "usuarios.index"
-        ];
-
-        $array_infos[] = [
-            'label' => 'Asignación de Personal',
-            'cantidad' => 0,
-            'color' => 'bg-indigo',
-            'icon' => asset("imgs/icon_inscripcion.png"),
-            "url" => "usuarios.index"
-        ];
+        if (in_array('personals.index', self::$permisos[$tipo])) {
+            $array_infos[] = [
+                'label' => 'Personal',
+                'cantidad' => Personal::count(),
+                'color' => 'bg-orange',
+                'icon' => asset("imgs/businessman.png"),
+                "url" => "usuarios.index"
+            ];
+        }
+        if (in_array('entrenamientos.index', self::$permisos[$tipo])) {
+            $array_infos[] = [
+                'label' => 'Entrenamientos',
+                'cantidad' => Entrenamiento::where("status", 1)->count(),
+                'color' => 'bg-cyan-accent-2',
+                'icon' => asset("imgs/checklist.png"),
+                "url" => "usuarios.index"
+            ];
+        }
+        if (in_array('asignacions.index', self::$permisos[$tipo])) {
+            $array_infos[] = [
+                'label' => 'Asignaciones de Personal',
+                'cantidad' => Asignacion::where("status", 1)->count(),
+                'color' => 'bg-indigo',
+                'icon' => asset("imgs/icon_inscripcion.png"),
+                "url" => "usuarios.index"
+            ];
+        }
 
         return $array_infos;
     }
