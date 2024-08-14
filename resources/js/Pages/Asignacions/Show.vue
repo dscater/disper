@@ -56,10 +56,33 @@ const cargaMapaGoogle = async () => {
     // Crear los marcadores
     props.asignacion.asignacion_detalles.forEach(function (markerData) {
         console.log(markerData.total_personal);
+        // Crear el contenido personalizado del marcador
+        const markerContent = document.createElement("div");
+        markerContent.style.position = "relative";
+
+        // Crear el texto que aparecerá sobre el marcador
+        const markerLabel = document.createElement("div");
+        markerLabel.innerText = `${markerData.lugar.nombre}`;
+        markerLabel.style.position = "absolute";
+        markerLabel.style.bottom = "100%";
+        markerLabel.style.left = "50%";
+        markerLabel.style.transform = "translateX(-50%)";
+        markerLabel.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+        markerLabel.style.color = "white";
+        markerLabel.style.padding = "2px 5px";
+        markerLabel.style.borderRadius = "3px";
+        markerLabel.style.fontSize = "12px";
+
         const pinGlyph = new PinElement({
             glyph: `${markerData.total_personal}/${markerData.requerido}`,
             glyphColor: "white",
+            title: "Prueba",
         });
+
+        // Añadir el texto y el pin al contenido del marcador
+        markerContent.appendChild(markerLabel);
+        markerContent.appendChild(pinGlyph.element);
+
         var AME = new AdvancedMarkerElement({
             map,
             position: {
@@ -68,7 +91,8 @@ const cargaMapaGoogle = async () => {
             },
             gmpDraggable: false,
             // title: markerData.nombre,
-            content: pinGlyph.element,
+            // content: pinGlyph.element,
+            content: markerContent,
         });
 
         // Crear el contenido de la InfoWindow
